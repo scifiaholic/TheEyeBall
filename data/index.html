@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, height=device-height">
+<script>
+var connection;
+connection.onopen = function () {
+	connection.send('Message from Browser to ESP8266 yay its Working!! ' + new Date()); 
+	connection.send('ping');
+};
+
+connection.onerror = function (error) {
+	console.log('WebSocket Error ', error);
+};
+
+connection.onmessage = function (e) {
+	console.log('Server: ', e.data);
+};
+
+function mod(){	
+	connection = new WebSocket("ws://192.168.4.1:81/", ['arduino']); 	
+	}	
+	
+function showEyeball(newValue){
+	document.getElementById("EyeballValue").innerHTML=newValue;
+	connection.send("x"+newValue);
+	}	
+	
+function showEyelid(newValue){
+	document.getElementById("EyelidValue").innerHTML=newValue;
+	connection.send("y"+newValue);
+	}
+	
+</script>
+
+</head>
+<body style="height=100% width=100%">
+The Eyeball<p></p>
+
+	<input type="button" onclick="mod()" >update connection<p></p>
+  
+<form name="form1" id="form1">
+	
+	<input type="range" id= "EyeballSlider" min="0" max="90" value="45" step="3" oninput="showEyeball(this.value)" /> Eyeball      
+     <br><br><span id="EyeballValue">0</span><p></p>
+	<input type="range" id= "EyeLidSlider" min="50" max="130" value="50" step="10" oninput="showEyelid(this.value)" />  Eyelid     
+     <br><br><span id="EyelidValue">0</span><p></p>
+
+</body>
+</html>
